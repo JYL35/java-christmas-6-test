@@ -29,6 +29,16 @@ public enum Menu {
         this.price = price;
     }
 
+    public static List<String> getTypeOfFoods(String type) {
+        List<String> typeOfFoods = new ArrayList<>();
+        for (Menu menu : Menu.values()) {
+            if (type.equals(menu.getType())) {
+                typeOfFoods.add(menu.name());
+            }
+        }
+        return List.copyOf(typeOfFoods);
+    }
+
     public static Menu findMenu(String name) {
         for (Menu menu : Menu.values()) {
             if (name.equals(menu.name())) {
