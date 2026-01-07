@@ -58,7 +58,7 @@ public class PlannerService {
     private int calculateTotalPrice(Map<String, Integer> order) {
         int result = 0;
         for (String menu : order.keySet()) {
-            result += Menu.findMenu(menu).getPrice();
+            result += (Menu.findMenu(menu).getPrice() * order.get(menu));
         }
         return result;
     }
