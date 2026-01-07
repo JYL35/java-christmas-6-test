@@ -25,8 +25,8 @@ public class OutputView {
         printResult("<증정 메뉴>", giveawayMenu);
         printBenefits("<혜택 내역>", plannerResult.eventDiscounts());
         printResult("<총혜택 금액>", "-" + formattedUnit(plannerResult.totalDiscount()));
-        printResult("<할인 후 예상 결제 금액>",
-                formattedUnit(plannerResult.totalPrice() - plannerResult.totalDiscount()));
+        int totalAmount = plannerResult.totalPrice() - plannerResult.totalDiscount() + plannerResult.giveawayMenu().getPrice();
+        printResult("<할인 후 예상 결제 금액>", formattedUnit(totalAmount));
         printResult("<12월 이벤트 배지>", plannerResult.badge().getName());
     }
 
@@ -42,6 +42,9 @@ public class OutputView {
 
     private void printBenefits(String type, List<EventDiscount> eventDiscounts) {
         System.out.println(type);
+        if (eventDiscounts.isEmpty()) {
+            System.out.println("없음");
+        }
         for (EventDiscount eventDiscount : eventDiscounts) {
             System.out.printf("%s: -%s", eventDiscount.type(), formattedUnit(eventDiscount.discountAmount()));
             printNewLine();
