@@ -22,4 +22,8 @@ public enum GiveawayEvent {
         }
         return new EventDiscount(GIVEAWAY_EVENT.type, discount);
     }
+
+    public Menu getGiveaway() {
+        return giveaway;
+    }
 }

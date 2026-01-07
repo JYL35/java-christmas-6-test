@@ -31,7 +31,7 @@ public class PlannerService {
     private Menu calculateGiveawayMenu(List<EventDiscount> eventDiscounts) {
         for (EventDiscount eventDiscount : eventDiscounts) {
             if (eventDiscount.type().equals("증정 이벤트")) {
-                return Menu.샴페인;
+                return GiveawayEvent.GIVEAWAY_EVENT.getGiveaway();
             }
         }
         return Menu.없음;

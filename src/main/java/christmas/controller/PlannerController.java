@@ -1,5 +1,8 @@
 package christmas.controller;
 
+import christmas.dto.OrderSheet;
+import christmas.dto.PlannerResult;
+import christmas.service.PlannerService;
 import christmas.util.Parser;
 import christmas.view.InputView;
 import christmas.view.OutputView;
@@ -7,20 +10,22 @@ import java.util.Map;
 
 public class PlannerController {
 
+    private final PlannerService plannerService;
     private final InputView inputView;
     private final OutputView outputView;
 
-    public PlannerController(InputView inputView, OutputView outputView) {
+    public PlannerController(PlannerService plannerService, InputView inputView, OutputView outputView) {
+        this.plannerService = plannerService;
         this.inputView = inputView;
         this.outputView = outputView;
     }
 
     public void start() {
         try {
-            int visitDay = readVisitDay();
-            Map<String, Integer> order = readOrder();
-            outputView.printStartPhrase(visitDay);
-            outputView.printOrder(order);
+            OrderSheet orderSheet = new OrderSheet(readVisitDay(), readOrder());
+            PlannerResult plannerResult = plannerService.calculateBenefits(orderSheet);
+            outputView.printStartPhrase(orderSheet);
+            outputView.printPlannerResult(plannerResult);
         } catch (RuntimeException e) {
             throw new IllegalArgumentException(e);
         }
