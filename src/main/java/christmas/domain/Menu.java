@@ -19,7 +19,9 @@ public enum Menu {
 
     제로콜라("음료", 3000),
     레드와인("음료", 60000),
-    샴페인("음료", 25000);
+    샴페인("음료", 25000),
+
+    없음("NONE", 0);
 
     private final String type;
     private final int price;

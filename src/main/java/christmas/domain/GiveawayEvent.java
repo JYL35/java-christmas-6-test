@@ -15,9 +15,9 @@ public enum GiveawayEvent {
         this.giveaway = giveaway;
     }
 
-    public static EventDiscount calculateDiscount(int totalPrice) {
+    public static EventDiscount calculateDiscount(int totalDiscount) {
         int discount = 0;
-        if (totalPrice >= GIVEAWAY_EVENT.condition) {
+        if (totalDiscount >= GIVEAWAY_EVENT.condition) {
             discount = GIVEAWAY_EVENT.giveaway.getPrice();
         }
         return new EventDiscount(GIVEAWAY_EVENT.type, discount);
