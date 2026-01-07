@@ -19,6 +19,8 @@ public class PlannerController {
         try {
             int visitDay = readVisitDay();
             Map<String, Integer> order = readOrder();
+            outputView.printStartPhrase(visitDay);
+            outputView.printOrder(order);
         } catch (RuntimeException e) {
             throw new IllegalArgumentException(e);
         }
