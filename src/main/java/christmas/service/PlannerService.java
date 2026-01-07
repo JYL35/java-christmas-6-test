@@ -16,7 +16,10 @@ public class PlannerService {
 
     public PlannerResult calculateBenefits(OrderSheet orderSheet) {
         int totalPrice = calculateTotalPrice(orderSheet.order());
-        List<EventDiscount> eventDiscounts = calculateEventDiscount(orderSheet, totalPrice);
+        List<EventDiscount> eventDiscounts = new ArrayList<>();
+        if (totalPrice >= 10000) {
+            eventDiscounts = calculateEventDiscount(orderSheet, totalPrice);
+        }
         return new PlannerResult(totalPrice, eventDiscounts);
     }
 
