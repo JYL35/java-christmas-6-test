@@ -26,7 +26,7 @@ public class PlannerController {
             PlannerResult plannerResult = plannerService.calculateBenefits(orderSheet);
             outputView.printStartPhrase(orderSheet);
             outputView.printPlannerResult(plannerResult);
-        } catch (RuntimeException e) {
+        } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e);
         }
     }
