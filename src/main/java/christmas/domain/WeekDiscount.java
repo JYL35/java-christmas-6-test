@@ -32,7 +32,7 @@ public enum WeekDiscount {
         int totalDiscountAmount = 0;
         for (String menu : order.keySet()) {
             if (typeOfFoods.contains(menu)) {
-                totalDiscountAmount += (2133 * order.get(menu));
+                totalDiscountAmount += (2023 * order.get(menu));
             }
         }
         return totalDiscountAmount;
