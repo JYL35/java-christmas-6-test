@@ -1,6 +1,6 @@
 package christmas.view;
 
-import christmas.domain.GiveawayEvent;
+import christmas.domain.Menu;
 import christmas.dto.EventDiscount;
 import christmas.dto.OrderSheet;
 import christmas.dto.PlannerResult;
@@ -19,7 +19,7 @@ public class OutputView {
     public void printPlannerResult(PlannerResult plannerResult) {
         printResult("<할인 전 총주문 금액>", formattedUnit(plannerResult.totalPrice()));
         String giveawayMenu = plannerResult.giveawayMenu().name();
-        if (giveawayMenu.equals(GiveawayEvent.GIVEAWAY_EVENT.getGiveaway().name())) {
+        if (giveawayMenu.equals(Menu.샴페인.name())) {
             giveawayMenu += " 1개";
         }
         printResult("<증정 메뉴>", giveawayMenu);

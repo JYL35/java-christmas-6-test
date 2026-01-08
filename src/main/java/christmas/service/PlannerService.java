@@ -1,27 +1,30 @@
 package christmas.service;
 
 import christmas.domain.Badge;
-import christmas.domain.ChristmasDiscount;
-import christmas.domain.GiveawayEvent;
+import christmas.domain.DiscountPolicy;
 import christmas.domain.Menu;
-import christmas.domain.SpecialDiscount;
-import christmas.domain.WeekDiscount;
 import christmas.dto.EventDiscount;
 import christmas.dto.OrderSheet;
 import christmas.dto.PlannerResult;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class PlannerService {
 
+    private final List<DiscountPolicy> discountPolicies;
+
+    public PlannerService(List<DiscountPolicy> discountPolicies) {
+        this.discountPolicies = discountPolicies;
+    }
+
     public PlannerResult calculateBenefits(OrderSheet orderSheet) {
-        int totalPrice = calculateTotalPrice(orderSheet.order());
-        List<EventDiscount> eventDiscounts = calculateEventDiscount(orderSheet, totalPrice);
-        Menu giveawayMenu = calculateGiveawayMenu(eventDiscounts);
+        int totalPrice = orderSheet.getTotalPrice();
         if (totalPrice < 10000) {
-            return new PlannerResult(totalPrice, giveawayMenu, new ArrayList<>(), 0, Badge.NONE);
+            return new PlannerResult(totalPrice, Menu.없음, new ArrayList<>(), 0, Badge.NONE);
         }
+
+        List<EventDiscount> eventDiscounts = calculateEventDiscount(orderSheet);
+        Menu giveawayMenu = calculateGiveawayMenu(eventDiscounts);
         int totalDiscount = calculateTotalDiscount(eventDiscounts);
         Badge badge = Badge.findBadge(totalDiscount);
 
@@ -31,7 +34,7 @@ public class PlannerService {
     private Menu calculateGiveawayMenu(List<EventDiscount> eventDiscounts) {
         for (EventDiscount eventDiscount : eventDiscounts) {
             if (eventDiscount.type().equals("증정 이벤트")) {
-                return GiveawayEvent.GIVEAWAY_EVENT.getGiveaway();
+                return Menu.샴페인;
             }
         }
         return Menu.없음;
@@ -45,21 +48,16 @@ public class PlannerService {
         return result;
     }
 
-    private List<EventDiscount> calculateEventDiscount(OrderSheet orderSheet, int totalPrice) {
+    private List<EventDiscount> calculateEventDiscount(OrderSheet orderSheet) {
         List<EventDiscount> eventDiscounts = new ArrayList<>();
-        eventDiscounts.add(ChristmasDiscount.calculateDiscount(orderSheet.visitDay()));
-        eventDiscounts.add(WeekDiscount.calculateDiscount(orderSheet));
-        eventDiscounts.add(SpecialDiscount.calculateDiscount(orderSheet.visitDay()));
-        eventDiscounts.add(GiveawayEvent.calculateDiscount(totalPrice));
+
+        for (DiscountPolicy discountPolicy : discountPolicies) {
+            int discountAmount = discountPolicy.calculateDiscountAmount(orderSheet);
+            if (discountAmount > 0) {
+                eventDiscounts.add(new EventDiscount(discountPolicy.getEventName(), discountAmount));
+            }
+        }
 
         return eventDiscounts;
-    }
-
-    private int calculateTotalPrice(Map<String, Integer> order) {
-        int result = 0;
-        for (String menu : order.keySet()) {
-            result += (Menu.findMenu(menu).getPrice() * order.get(menu));
-        }
-        return result;
     }
 }
