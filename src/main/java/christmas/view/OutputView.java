@@ -18,20 +18,24 @@ public class OutputView {
 
     public void printPlannerResult(PlannerResult plannerResult) {
         printResult("<할인 전 총주문 금액>", formattedUnit(plannerResult.totalPrice()));
-        String giveawayMenu = plannerResult.giveawayMenu().name();
-        if (giveawayMenu.equals(Menu.샴페인.name())) {
-            giveawayMenu += " 1개";
-        }
-        printResult("<증정 메뉴>", giveawayMenu);
+        printGiveawayMenu("<증정 메뉴>", plannerResult.giveawayMenu());
         printBenefits("<혜택 내역>", plannerResult.eventDiscounts());
         printResult("<총혜택 금액>", "-" + formattedUnit(plannerResult.totalDiscount()));
-        int totalAmount = plannerResult.totalPrice() - plannerResult.totalDiscount() + plannerResult.giveawayMenu().getPrice();
-        printResult("<할인 후 예상 결제 금액>", formattedUnit(totalAmount));
+        printResult("<할인 후 예상 결제 금액>", formattedUnit(plannerResult.expectedPaymentAmount()));
         printResult("<12월 이벤트 배지>", plannerResult.badge().getName());
     }
 
     private String formattedUnit(int amount) {
         return String.format("%,d원", amount);
+    }
+
+    private void printGiveawayMenu(String type, Menu menu) {
+        System.out.println(type);
+        if (menu.name().equals(Menu.샴페인.name())) {
+            System.out.println(menu.name() + " 1개");
+            return;
+        }
+        System.out.println(menu.name());
     }
 
     private void printResult(String type, String contents) {
@@ -44,6 +48,8 @@ public class OutputView {
         System.out.println(type);
         if (eventDiscounts.isEmpty()) {
             System.out.println("없음");
+            printNewLine();
+            return;
         }
         for (EventDiscount eventDiscount : eventDiscounts) {
             System.out.printf("%s: -%s", eventDiscount.type(), formattedUnit(eventDiscount.discountAmount()));

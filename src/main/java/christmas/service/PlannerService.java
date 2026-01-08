@@ -20,15 +20,15 @@ public class PlannerService {
     public PlannerResult calculateBenefits(OrderSheet orderSheet) {
         int totalPrice = orderSheet.getTotalPrice();
         if (totalPrice < 10000) {
-            return new PlannerResult(totalPrice, Menu.없음, new ArrayList<>(), 0, Badge.NONE);
+            return new PlannerResult(totalPrice, Menu.없음, new ArrayList<>(), 0, totalPrice, Badge.NONE);
         }
-
         List<EventDiscount> eventDiscounts = calculateEventDiscount(orderSheet);
         Menu giveawayMenu = calculateGiveawayMenu(eventDiscounts);
         int totalDiscount = calculateTotalDiscount(eventDiscounts);
+        int expectedPaymentAmount = totalPrice - totalDiscount + giveawayMenu.getPrice();
         Badge badge = Badge.findBadge(totalDiscount);
-
-        return new PlannerResult(totalPrice, giveawayMenu, eventDiscounts, totalDiscount, badge);
+        return new PlannerResult(totalPrice, giveawayMenu, eventDiscounts,
+                totalDiscount, expectedPaymentAmount, badge);
     }
 
     private Menu calculateGiveawayMenu(List<EventDiscount> eventDiscounts) {

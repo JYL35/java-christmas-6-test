@@ -9,6 +9,7 @@ public record PlannerResult(
         Menu giveawayMenu,
         List<EventDiscount> eventDiscounts,
         int totalDiscount,
+        int expectedPaymentAmount,
         Badge badge
 ) {
 }
